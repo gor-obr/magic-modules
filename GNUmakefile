@@ -29,6 +29,7 @@ ifneq ($(RESOURCE),)
   tpgtools_compile += --resource $(RESOURCE)
 endif
 terraform build:
+	make serialize
 	make mmv1
 	make tpgtools
 
@@ -46,4 +47,10 @@ validator:
 		bundle; \
 		bundle exec compiler -e terraform -f validator -o $(OUTPUT_PATH) $(mmv1_compile);
 
+serialize:
+	cd tpgtools;\
+		go run . --path "api" --overrides "overrides" --mode "serialization" > temp.serial;\
+		mv -f temp.serial serialization.go;\
+
 .PHONY: mmv1 tpgtools
+
